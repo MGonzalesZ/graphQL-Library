@@ -78,6 +78,15 @@ const resolvers = {
       return books.find((book) => book.id === id);
     },
   },
+
+  Book: {
+    author: (root) => {
+      return {
+        name: root.authorName,
+        nationality: root.authorNationality,
+      };
+    },
+  },
 };
 
 // The ApolloServer constructor requires two parameters: your schema
