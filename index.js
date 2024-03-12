@@ -39,6 +39,7 @@ const typeDefs = `#graphql
     getBooksCount:Int!
     getAllBooks: [Book]
     getBook(id: String): Book
+    getAllBooksByAuthor(authorName: String): [Book]
   }
 `;
 
@@ -77,6 +78,8 @@ const resolvers = {
       const { id } = args;
       return books.find((book) => book.id === id);
     },
+    getAllBooksByAuthor: (root, { authorName }) =>
+      books.filter((book) => book.authorName === authorName),
   },
 
   Book: {
