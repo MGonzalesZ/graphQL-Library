@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
+import { v4 as uuid } from 'uuid';
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -10,7 +11,7 @@ const typeDefs = `#graphql
   enum Genre{
     NONE
     FICTION
-    MISTERY
+    MYSTERY
     FANTASY
     ROMANCE
   } 
@@ -41,6 +42,20 @@ const typeDefs = `#graphql
     getBook(id: String): Book
     getAllBooksByAuthor(authorName: String): [Book]
   }
+
+  type Mutation {
+    addBook (
+        title: String!
+        description: String
+        isbn: String
+        publisher: String!
+        genre: Genre!
+        publishYear: Int
+        authorName: String! 
+        authorNationality: String
+     ): Book
+  }
+
 `;
 
 const books = [
@@ -71,6 +86,15 @@ const books = [
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
+  Book: {
+    author: (root) => {
+      return {
+        name: root.authorName,
+        nationality: root.authorNationality,
+      };
+    },
+  },
+
   Query: {
     getBooksCount: () => books.length,
     getAllBooks: () => books,
@@ -82,12 +106,11 @@ const resolvers = {
       books.filter((book) => book.authorName === authorName),
   },
 
-  Book: {
-    author: (root) => {
-      return {
-        name: root.authorName,
-        nationality: root.authorNationality,
-      };
+  Mutation: {
+    addBook: (root, args) => {
+      const newBook = { ...args, id: uuid() };
+      books.push(newBook);
+      return newBook;
     },
   },
 };
