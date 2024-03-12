@@ -7,10 +7,29 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
+  enum Genre{
+    NONE
+    FICTION
+    MISTERY
+    FANTASY
+    ROMANCE
+  } 
+
+  type Author{
+    name: String
+    nationality: String
+  }
+
   # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
-    title: String
-    author: String
+    id: String!
+    title: String!
+    description: String
+    isbn: String
+    publisher: String!
+    genre: Genre!
+    publishYear: Int
+    author: Author!
   }
 
   # The "Query" type is special: it lists all of the available queries that
