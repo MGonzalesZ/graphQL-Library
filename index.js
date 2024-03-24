@@ -3,6 +3,9 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import axios from 'axios';
 import { GraphQLError } from 'graphql';
 import { v4 as uuid } from 'uuid';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -136,7 +139,7 @@ const resolvers = {
 
     getAllBooksFromRestApi: async (root, args) => {
       const { data: BooksFromRestApi } = await axios.get(
-        'http://localhost:3000/books'
+        process.env.API_URL + '/books'
       );
 
       return BooksFromRestApi;
@@ -189,7 +192,7 @@ const resolvers = {
 
     addBookInRestApi: async (root, args) => {
       const responseExistsBook = await axios.get(
-        'http://localhost:3000/books?title=' + args.title
+        process.env.API_URL + '/books?title=' + args.title
       );
       console.log(responseExistsBook.data);
       if (responseExistsBook.data.length > 0) {
@@ -201,7 +204,10 @@ const resolvers = {
       }
 
       const newBook = { ...args };
-      const response = await axios.post('http://localhost:3000/books', newBook);
+      const response = await axios.post(
+        process.env.API_URL + '/books',
+        newBook
+      );
       return response.data;
     },
   },
