@@ -19,6 +19,13 @@
       "publishYear": 2009,
       "authorName": "Paul Auster",
       "authorNationality": "Estadounidense"
+    },
+    {
+      "id": "eac0",
+      "title": "El Principito",
+      "publisher": "Sin registro",
+      "genre": "FANTASY",
+      "authorName": "Juan Perez"
     }
   ]
 }
