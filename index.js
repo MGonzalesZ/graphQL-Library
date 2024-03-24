@@ -96,7 +96,9 @@ const typeDefs = `#graphql
     publishYear: Int
     authorName: String
     authorNationality: String
- ): Book
+  ): Book
+
+  deleteBookInRestApi (id:String!): Book
 
   }
 
@@ -252,6 +254,22 @@ const resolvers = {
         updatedBook
       );
 
+      return response.data;
+    },
+
+    deleteBookInRestApi: async (root, { id }) => {
+      // const responseExistsBook = await axios
+      //   .get(process.env.API_URL + '/books/' + args.id)
+      //   .catch(function (error) {
+      //     return null;
+      //   });
+
+      // if (deletedBookIndex === -1) return null;
+
+      // const deletedBook = books.splice(deletedBookIndex, 1)[0];
+      // return deletedBook;
+
+      const response = await axios.delete(process.env.API_URL + '/books/' + id);
       return response.data;
     },
   },
