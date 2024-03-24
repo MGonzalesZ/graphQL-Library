@@ -86,6 +86,18 @@ const typeDefs = `#graphql
     authorNationality: String
   ): Book
 
+  updateBookInRestApi (
+    id:String!
+    title: String
+    description: String
+    isbn: String
+    publisher: String
+    genre: Genre
+    publishYear: Int
+    authorName: String
+    authorNationality: String
+ ): Book
+
   }
 
 `;
@@ -208,6 +220,38 @@ const resolvers = {
         process.env.API_URL + '/books',
         newBook
       );
+      return response.data;
+    },
+
+    updateBookInRestApi: async (root, args) => {
+      const responseExistsBook = await axios
+        .get(process.env.API_URL + '/books/' + args.id)
+        .catch(function (error) {
+          return null;
+        });
+
+      // @TODO
+      if (responseExistsBook.status === 404) return null;
+      const book = responseExistsBook.data;
+      const updatedBook = {
+        ...book,
+        title: args.title ? args.title : book.title,
+        description: args.description ? args.description : book.description,
+        isbn: args.isbn ? args.isbn : book.isbn,
+        publisher: args.publisher ? args.publisher : book.publisher,
+        genre: args.genre ? args.genre : book.genre,
+        publishYear: args.publishYear ? args.publishYear : book.publishYear,
+        authorName: args.authorName ? args.authorName : book.authorName,
+        authorNationality: args.authorNationality
+          ? args.authorNationality
+          : book.authorNationality,
+      };
+
+      const response = await axios.put(
+        process.env.API_URL + '/books/' + book.id,
+        updatedBook
+      );
+
       return response.data;
     },
   },
